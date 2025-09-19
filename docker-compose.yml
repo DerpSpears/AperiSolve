@@ -2,10 +2,10 @@ services:
   web:
     image: ghcr.io/zeecka/aperisolve:latest
     #build: .
-    container_name: aperisolve-web
+    container_name: aperisolve-web-nolimit
     restart: always
     ports:
-      - "5000:5000"
+      - "2000:5000"
     volumes:
       - apresults:/aperisolve/results
     depends_on:
@@ -21,7 +21,7 @@ services:
   worker:
     image: ghcr.io/zeecka/aperisolve:latest
     #build: .
-    container_name: aperisolve-worker
+    container_name: aperisolve-worker-nolimit
     restart: always
     command: rq worker default --url redis://redis:6379/0
     volumes:
@@ -34,7 +34,7 @@ services:
 
   postgres:
     image: postgres:14
-    container_name: postgres
+    container_name: postgres-nolimit
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -48,17 +48,17 @@ services:
 
   redis:
     image: redis:7
-    container_name: redis
+    container_name: redis-nolimit
     restart: always
     env_file:
       - .env
 
   rqdashboard:
     image: eoranged/rq-dashboard
-    container_name: rq-dashboard
+    container_name: rq-dashboard-nolimit
     restart: always
     ports:
-      - "9181:9181"
+      - "2001:9181"
     depends_on:
       - redis
     env_file:

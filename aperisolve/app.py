@@ -21,7 +21,7 @@ app.json.sort_keys = False  # type: ignore
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["MAX_CONTENT_LENGTH"] = int(
-    os.environ.get("MAX_CONTENT_LENGTH", 1024 * 1024)
+    os.environ.get("MAX_CONTENT_LENGTH", 1024 * 1024 * 200)
 )
 RESULT_FOLDER.mkdir(parents=True, exist_ok=True)
 
