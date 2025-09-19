@@ -120,12 +120,17 @@ def upload_image() -> tuple[Response, int]:
         return jsonify({"submission_hash": submission.hash}), 200
 
     # If image is new, create a new Image entry
+
     new_img_path = RESULT_FOLDER / img_hash / image_name
+    # Always ensure DB entry exists, even if directory exists
     if not new_img_path.parent.exists():
         new_img_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(new_img_path, "wb") as f:  # Write file to disk
+        with open(new_img_path, "wb") as f:
             f.write(image_data)
 
+    sub_img = Image.query.filter_by(hash=img_hash).first()  # type: ignore
+    if sub_img is None:
+        # Create DB entry if missing
         new_img = Image(
             file=str(new_img_path),
             hash=img_hash,
@@ -136,8 +141,8 @@ def upload_image() -> tuple[Response, int]:
         )
         db.session.add(new_img)
         db.session.commit()
+        sub_img = new_img
 
-    sub_img = Image.query.filter_by(hash=img_hash).first()  # type: ignore
     sub_img.upload_count += 1
     db.session.commit()
 
